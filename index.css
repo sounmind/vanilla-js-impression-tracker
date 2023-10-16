@@ -1,0 +1,75 @@
+.status-list {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+
+.not-on-impressing {
+  background-color: skyblue;
+}
+
+.on-impressing {
+  background-color: lightcoral;
+}
+
+.impressed {
+  background-color: lightgreen;
+}
+
+.list-container {
+  width: 500px;
+  height: 500px;
+  background-color: gray;
+  overflow: scroll;
+  padding: 10px;
+  border: 1px solid black;
+  font-size: 10px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  gap: 10px;
+  background-color: lightgray;
+}
+
+.list-item {
+  background-color: white;
+  height: 100px;
+  border: 1px solid black;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.top-left {
+  justify-self: flex-start;
+  align-self: flex-start;
+}
+
+.top-right {
+  justify-self: flex-end;
+  align-self: flex-start;
+}
+
+.top-clock {
+  justify-self: center;
+  align-self: flex-start;
+}
+
+.bottom-clock {
+  justify-self: center;
+  align-self: flex-end;
+}
+
+.bottom-left {
+  justify-self: flex-start;
+  align-self: flex-end;
+}
+
+.bottom-right {
+  justify-self: flex-end;
+  align-self: flex-end;
+}
