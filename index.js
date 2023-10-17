@@ -1,10 +1,11 @@
 const IMPRESSION_DURATION_THRESHOLD = 1000;
+const INTERSECTION_RATIO = 0.5;
 const impressedItems = [];
 const isAlreadyImpressedItem = (id) => impressedItems.includes(id);
-let letEventCount = 0;
+let eventCount = 0;
 
 const sendEvent = () => {
-  console.log(`event sent 💌 count: ${++letEventCount}`);
+  console.log(`event sent 💌 count: ${++eventCount}`);
 };
 
 const changeStatusImpressed = (targetElement, targetId) => {
@@ -12,21 +13,18 @@ const changeStatusImpressed = (targetElement, targetId) => {
   impressedItems.push(targetId);
 };
 
-const changeStatusOnImpressing = (targetElement, targetId) => {
+const changeStatusOnImpressing = (targetElement) => {
   targetElement.style.backgroundColor = "lightcoral";
 };
 
-const changeStatusNotOnImpressing = (targetElement, targetId) => {
+const changeStatusNotOnImpressing = (targetElement) => {
   targetElement.style.backgroundColor = "skyblue";
 };
 
 const createCallback = () => {
   let timeoutId = null;
-  /** just for visualization */
-  let intervalId = null;
-  let clockCount = 0;
 
-  return function callback(intersectionObserverEntries, intersectionObserver) {
+  return function callback(intersectionObserverEntries) {
     intersectionObserverEntries.forEach((entry) => {
       const { intersectionRatio, target } = entry;
       const { id } = target;
@@ -35,14 +33,7 @@ const createCallback = () => {
         return;
       }
 
-      /** just for visualization */
-      target.querySelectorAll(".ratio").forEach((item) => {
-        item.textContent = `intersection ratio: ${(
-          intersectionRatio * 100
-        ).toFixed(2)}%`;
-      });
-
-      if (intersectionRatio >= 0.5) {
+      if (intersectionRatio >= INTERSECTION_RATIO) {
         changeStatusOnImpressing(target, id);
 
         if (timeoutId) {
@@ -56,33 +47,18 @@ const createCallback = () => {
           clearInterval(intervalId);
         }, IMPRESSION_DURATION_THRESHOLD);
 
-        /** just for visualization */
-        intervalId = setInterval(() => {
-          clockCount += 0.1;
-          target.querySelectorAll(".count").forEach((item) => {
-            item.textContent = clockCount.toFixed(1);
-          });
-        }, 10);
-      } else {
-        clearTimeout(timeoutId);
-        timeoutId = null;
-        changeStatusNotOnImpressing(target, id);
-
-        /** just for visualization */
-        clearInterval(intervalId);
-        intervalId = null;
-        clockCount = 0;
-        target.querySelectorAll(".count").forEach((item) => {
-          item.textContent = clockCount;
-        });
+        return;
       }
+
+      clearTimeout(timeoutId);
+      timeoutId = null;
+      changeStatusNotOnImpressing(target, id);
     });
   };
 };
 
 const options = {
   root: document.querySelector("#scrollArea"),
-  /** for this, it's root's padding */
   rootMargin: "10px",
   threshold: [...Array(1000)].map((_, index) => index / 1000),
 };
